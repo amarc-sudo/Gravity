@@ -1,8 +1,10 @@
 package com.runespace.game.states;
 
+import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -24,15 +26,22 @@ import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.runespace.game.LaunchGame;
 import com.runespace.game.entities.Player;
 import com.runespace.game.handlers.CustomContactListener;
 import com.runespace.game.handlers.CustomInputHandling;
 import com.runespace.game.handlers.CustomInputProcessor;
 import com.runespace.game.handlers.GameStateManager;
+import com.runespace.game.stage.Hud;
 import com.runespace.game.utils.Constants;
 
-public abstract class Level extends GameState {
+import box2dLight.PointLight;
+import box2dLight.RayHandler;
+
+public abstract class Level extends GameState implements ApplicationListener {
 
 	//body
 	protected Body body;
@@ -48,11 +57,11 @@ public abstract class Level extends GameState {
 	protected FixtureDef fdef;
 	protected OrthographicCamera box2dCam;
 	protected Box2DDebugRenderer debug;
-	
+	Hud hud;
 	//customcontactlistener
 	protected CustomContactListener customContactListener;
 	
-	
+	RayHandler handler;
 
 	//tiled elements
 	protected TiledMap tiledMap;
@@ -70,9 +79,10 @@ public abstract class Level extends GameState {
 	
 	protected Texture background;
 	
+	
 	//timer for gravity change
 	protected int time = 0;
-	
+	protected int jump = 0;
 	//Music
 	Music music;
 	public Level(GameStateManager gsm, Vector2 gravity) {
@@ -92,7 +102,7 @@ public abstract class Level extends GameState {
 		box2dCam.setToOrtho(false, Constants.VIEWPORT_WIDTH/Constants.PIXEL_METER,Constants.VIEWPORT_HEIGHT/Constants.PIXEL_METER);
 		debug = new Box2DDebugRenderer();
 
-		//set inputprocessor
+		
 
 
 		//set contactlistener
@@ -100,22 +110,33 @@ public abstract class Level extends GameState {
 		world.setContactListener(customContactListener);
 		
 		//set font
-		this.createFont();
+		
 		debug.setDrawBodies(false);
 		//setup camera
 		cam.setToOrtho(false, Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT);
-		
+		//set hud
+		hud = new Hud(new ExtendViewport(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT, cam), LaunchGame.batch);
+		hud.update(score, jump);
+		handler = new RayHandler(world);
+		RayHandler.setGammaCorrection(true);
+		RayHandler.useDiffuseLight(true);
+		handler.setAmbientLight(0);
+		handler.setShadows(true);
+		handler.setBlurNum(3);
+		new PointLight(handler, 8, new Color(1,1,1,1), 100, 0, 0);
 	}
 
 	public void update(float dt) {
 		//update World
+		scoreUpdate();
 		world.step(1/60f, 6, 2);
 	}
 	
 	public void render(SpriteBatch sb) {
 		
-		
-
+		handler.setCombinedMatrix(cam);
+		handler.updateAndRender();
+		hud.update(score, jump);
 		tmr.setView(cam);
 		tmr.render();
 
@@ -136,46 +157,6 @@ public abstract class Level extends GameState {
 
 	}
 
-	//Map set
-	/*
-	public void createTiles(TiledMap tiledMap) {
-		this.tiledMap = tiledMap;
-		tmr = new OrthogonalTiledMapRenderer(this.tiledMap);
-
-		TiledMapTileLayer layer = (TiledMapTileLayer)this.tiledMap.getLayers().get("ground");
-		tileSize = layer.getTileHeight();
-		createTiledBodies(layer, Constants.PLARTFORM_BIT);
-	}
-
-	public void createTiledBodies(TiledMapTileLayer layer, short BITS){
-
-		for(int row = 0 ; row < layer.getHeight() ; row++) {
-			for(int col = 0 ; col < layer.getWidth() ;col++) {
-				TiledMapTileLayer.Cell cell = layer.getCell(col, row);
-
-				if(cell == null)continue;
-				if(cell.getTile()==null)continue;
-
-				bdef.type = BodyDef.BodyType.StaticBody;
-				bdef.position.set((col+0.5f)*tileSize/Constants.PIXEL_METER,(row+0.5f)*tileSize/Constants.PIXEL_METER);
-				ChainShape chainShape = new ChainShape();
-				Vector2[] vectors= new Vector2[5];
-
-				vectors[0] = new Vector2(-tileSize/2/Constants.PIXEL_METER, -tileSize/2/Constants.PIXEL_METER);
-				vectors[1] = new Vector2(-tileSize/2/Constants.PIXEL_METER, tileSize/2/Constants.PIXEL_METER);
-				vectors[2] = new Vector2(tileSize/2/Constants.PIXEL_METER, tileSize/2/Constants.PIXEL_METER);
-				vectors[3] = new Vector2(tileSize/2/Constants.PIXEL_METER, -tileSize/2/Constants.PIXEL_METER);
-				vectors[4] = new Vector2(-tileSize/2/Constants.PIXEL_METER, -tileSize/2/Constants.PIXEL_METER);
-
-				chainShape.createChain(vectors);
-				fdef.shape = chainShape;
-				fdef.filter.categoryBits = Constants.PLARTFORM_BIT;
-				fdef.filter.maskBits = Constants.BOX_BIT | Constants.SPHERE_BIT;
-
-				world.createBody(bdef).createFixture(fdef).setUserData("ground");
-			}
-		}
-	}*/
 	
 	public void createTileCondition(short BIT, String type, Boolean fixture){
 		
@@ -272,13 +253,16 @@ public abstract class Level extends GameState {
 	
 	public void movePlayer() {
 		if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && !gravityBool ) {
-			 if(customContactListener.isOnGround())
+			 if(customContactListener.isOnGround()) {
 				boxPlayer.applyForceToCenter(0, 400, true);
-			 gsm.pause();
+			 	jump +=1;
+			 }
 		}
 		else if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
-			if(customContactListener.isOnHead())
+			if(customContactListener.isOnHead()) {
 				boxPlayer.applyForceToCenter(0, -400, true);
+				jump +=1;
+			}
 		}
 		
 		if(Gdx.input.isKeyPressed(Input.Keys.LEFT) && boxPlayer.getLinearVelocity().x > -3.00f) {
@@ -319,6 +303,13 @@ public abstract class Level extends GameState {
 		
 	}
 
+	public void scoreUpdate() {
+		if((!gravityBool && !customContactListener.isOnGround()) || (gravityBool && !this.customContactListener.isOnHead()))
+			score+=1;
+		if((!gravityBool && customContactListener.isOnGround()) || (gravityBool && this.customContactListener.isOnHead()))
+			score-=1;
+	}
+	
 	public void checkGameOver() {
 		if(/*player.getPosition().x < ((box2dCam.position.x)-box2dCam.viewportWidth/2)-Constants.WIDTH_PLAYER/Constants.PIXEL_METER ||*/ customContactListener.isDead()) {
 			gameOver();
@@ -351,16 +342,7 @@ public abstract class Level extends GameState {
 		font = generator.generateFont(parameter);
 	}
 	
-	public void drawFont(SpriteBatch sb) {
-		sb.begin();
-		if((!gravityBool && !customContactListener.isOnGround()) || (gravityBool && !this.customContactListener.isOnHead()))
-			score+=1;
-		if((!gravityBool && customContactListener.isOnGround()) || (gravityBool && this.customContactListener.isOnHead()))
-			score-=1;
-		font.draw(sb, String.valueOf(score),  cam.position.x + Constants.VIEWPORT_WIDTH/2-100, 
-				cam.position.y+ Constants.VIEWPORT_HEIGHT/2);
-		sb.end();
-	}
+	
 
 	public void createGround(){
 

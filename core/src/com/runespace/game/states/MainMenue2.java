@@ -16,8 +16,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.runespace.game.LaunchGame;
 import com.runespace.game.handlers.GameStateManager;
+import com.runespace.game.stage.Hud;
 import com.runespace.game.utils.Constants;
 
 public class MainMenue2 extends GameState {
@@ -68,17 +70,7 @@ public class MainMenue2 extends GameState {
 
         buttonTab = new TextButton[5];
 
-       /*
-        button = new TextButton("Level 1", textButtonStyle);
-        button1 = new TextButton("Level 2", textButtonStyle);
-        button.setWidth(150f);
-        button.setHeight(100f);
-        button1.setWidth(150f);
-        button1.setHeight(100f);
-        button.setPosition(Constants.VIEWPORT_WIDTH/1.5f, Constants.VIEWPORT_HEIGHT/1.5f);
-        button1.setPosition(Constants.VIEWPORT_WIDTH/1.5f, Constants.VIEWPORT_HEIGHT/1.5f - button.getHeight()*1.5f);
-        stage.addActor(button);
-        stage.addActor(button1);*/
+    
         for(int i = 0 ; i < 5 ; i++){
         	if(i != 2)
         		buttonTab[i] = new TextButton("Level " +(i+1), textButtonStyle);
@@ -89,21 +81,8 @@ public class MainMenue2 extends GameState {
 			buttonTab[i].setPosition(Gdx.graphics.getWidth()/1.5f, Gdx.graphics.getHeight()/1.5f - ((buttonTab[0].getHeight()*1.5f)*i)/2);
 			stage.addActor(buttonTab[i]);
         }
-        /*
-        button.addListener(new ChangeListener() {
-            @Override
-            public void changed (ChangeEvent event, Actor actor) {
-                
-            }
-        });
-        button1.addListener(new ChangeListener() {
-            @Override
-            public void changed (ChangeEvent event, Actor actor) {
-                
-            }
-        });
-		;*/
-
+     
+       
 		this.gameEnd = gameEnd;
 	}
 
@@ -131,6 +110,7 @@ public class MainMenue2 extends GameState {
 	public void render(SpriteBatch sb) {
 		// TODO Auto-generated method stub
         stage.draw();
+       
 	}
 
 	@Override

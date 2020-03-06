@@ -54,7 +54,7 @@ public class Level4 extends Level{
 		if(!gravityBool)
 			player.render(sb, gravityBool);
 		sb.end();
-		this.drawFont(sb);
+		
 		debug.render(world, box2dCam.combined);
 
 	}
@@ -119,6 +119,18 @@ public class Level4 extends Level{
 	protected void handleInput() {
 		// TODO Auto-generated method stub
 		player.movePlayer(customContactListener,gravityBool);
+	}
+
+	@Override
+	public void create() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void render() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 

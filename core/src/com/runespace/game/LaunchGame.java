@@ -11,7 +11,7 @@ import com.runespace.game.handlers.GameStateManager;
 import com.runespace.game.states.LoadingScreen;
 
 public class LaunchGame extends com.badlogic.gdx.Game implements Screen {
-	SpriteBatch batch;
+	public static SpriteBatch batch;
 	GameStateManager gsm;
 	
 	//Asset Mananger

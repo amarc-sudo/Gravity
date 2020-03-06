@@ -55,7 +55,7 @@ public class Level5 extends Level {
 		sb.begin();
 		player.render(sb, false);
 		sb.end();
-		this.drawFont(sb);
+		//this.drawFont(sb);
 		debug.render(world, box2dCam.combined);
 	}
 
@@ -98,6 +98,18 @@ public class Level5 extends Level {
 	public void movePlayer() {
 		// TODO Auto-generated method stub
 		super.movePlayer();
+	}
+
+	@Override
+	public void create() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void render() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

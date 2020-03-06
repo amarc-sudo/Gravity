@@ -30,7 +30,6 @@ import com.runespace.game.handlers.CustomContactListener;
 import com.runespace.game.handlers.CustomInputHandling;
 import com.runespace.game.handlers.CustomInputProcessor;
 import com.runespace.game.handlers.GameStateManager;
-import com.runespace.game.scoreboard.TestSave;
 import com.runespace.game.utils.Constants;
 
 public abstract class Level extends GameState {
@@ -53,7 +52,7 @@ public abstract class Level extends GameState {
 	//customcontactlistener
 	protected CustomContactListener customContactListener;
 	
-	TestSave save;
+	
 
 	//tiled elements
 	protected TiledMap tiledMap;
@@ -79,7 +78,7 @@ public abstract class Level extends GameState {
 	public Level(GameStateManager gsm, Vector2 gravity) {
 		super(gsm);
 
-		save = new TestSave();
+	
 		//
 		tiledMap = LaunchGame.assetManager.get("maps/Main.tmx", TiledMap.class);
 		//setup background;

@@ -18,7 +18,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.runespace.game.LaunchGame;
 import com.runespace.game.handlers.GameStateManager;
-import com.runespace.game.scoreboard.TestSave;
 import com.runespace.game.utils.Constants;
 
 public class MainMenue2 extends GameState {
@@ -45,11 +44,10 @@ public class MainMenue2 extends GameState {
     Image backImage;
 	Texture background;
 	
-	TestSave save;
+
 	
 	public MainMenue2(GameStateManager gsm, Boolean gameEnd) {
 		super(gsm);
-		save = new TestSave();
 		stage = new Stage();
         background = LaunchGame.assetManager.get("background.jpg");
 		backImage = new Image(background);

@@ -84,10 +84,6 @@ public class Level3 extends Level {
 	protected void handleInput() {
 		// TODO Auto-generated method stub
 		movePlayer();
-		if(Gdx.input.isKeyPressed(Input.Keys.K) ) {
-			this.save.add(this);
-			this.save.save("coucou");
-		}
 	}
 	@Override
 	public void movePlayer() {

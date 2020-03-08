@@ -290,7 +290,7 @@ public abstract class Level extends GameState implements ApplicationListener {
 	
 	public void moveCam(int speedCam) {
 		/*
-		this.box2dCam.position.x += speedCam/Constants.PIXEL_METER;
+		this.box2dCamposition.x += speedCam/Constants.PIXEL_METER;
 		this.box2dCam.position.y = player.getPosition().y;
 		this.box2dCam.update();
 		this.cam.position.x += speedCam;

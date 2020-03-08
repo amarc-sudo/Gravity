@@ -21,7 +21,7 @@ public class Level3 extends Level {
 		scoreArray.load("level1");
 
 		createGround();
-		
+		createDead();
 		//createTiles(LaunchGame.assetManager.get("maps/Main.tmx", TiledMap.class));
 		//this.createTileCondition(Constants.SPHERE_BIT, "dead", true);
 		// TODO Auto-generated constructor stub
@@ -45,12 +45,12 @@ public class Level3 extends Level {
 		super.render(sb);
 		
 		sb.begin();
-		//player.render(sb, false);
+		player.render(sb, false);
 		sb.end();
 		//pointLight.setPosition(this.box2dCam.position.x+Constants.VIEWPORT_WIDTH/2/Constants.PIXEL_METER, this.box2dCam.position.y+Constants.VIEWPORT_HEIGHT/2/Constants.PIXEL_METER);
 		debug.render(world, box2dCam.combined);
 		hud.stage.draw();
-		
+
 	}
 
 	@Override
@@ -58,22 +58,6 @@ public class Level3 extends Level {
 		// TODO Auto-generated method stub
 		super.dispose();
 	}
-
-	/*@Override
-	public void createTiles(TiledMap tiledMap) {
-		// TODO Auto-generated method stub
-		super.createTiles(tiledMap);
-	}*/
-	/*public void createPlayer(int x, int y) {
-		// TODO Auto-generated method stub
-		super.createPlayer(x, y);
-	}
-	/*
-	@Override
-	public void createTiledBodies(TiledMapTileLayer layer, short BITS) {
-		// TODO Auto-generated method stub
-		super.createTiledBodies(layer, BITS);
-	}*/
 
 	@Override
 	public void gameOver() {
@@ -85,7 +69,7 @@ public class Level3 extends Level {
 	@Override
 	protected void handleInput() {
 		// TODO Auto-generated method stub
-
+		player.movePlayer(customContactListener,gravityBool);
 	}
 
 	public void create() {

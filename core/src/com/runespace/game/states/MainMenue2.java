@@ -44,6 +44,7 @@ public class MainMenue2 extends GameState {
 	public MainMenue2(GameStateManager gsm, Boolean gameEnd) {
 		super(gsm);
 		stage = new Stage();
+		Gdx.input.setInputProcessor(stage);
         background = LaunchGame.assetManager.get("background.jpg");
 		backImage = new Image(background);
 		stage.addActor(backImage);
@@ -74,7 +75,7 @@ public class MainMenue2 extends GameState {
 			buttonTab[i].setPosition(Gdx.graphics.getWidth()/1.5f, Gdx.graphics.getHeight()/1.5f - ((buttonTab[0].getHeight()*1.5f)*i)/2);
 			stage.addActor(buttonTab[i]);
         }
-     
+        
   
 	}
 
@@ -94,7 +95,7 @@ public class MainMenue2 extends GameState {
 	@Override
 	public void update(float dt) {
 		// TODO Auto-generated method stub
-
+		 Gdx.input.setInputProcessor(stage);
 		handleInput();
 	}
 

@@ -1,10 +1,12 @@
 package com.runespace.game.states;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.runespace.game.LaunchGame;
 import com.runespace.game.handlers.GameStateManager;
 import com.runespace.game.scoreboard.ScoreBoard;
+import com.runespace.game.utils.Constants;
 
 public class Level4 extends Level{
 
@@ -23,7 +25,7 @@ public class Level4 extends Level{
 	//	this.createTileCondition(Constants.SPHERE_BIT, "sensorG", true);
 	//	this.createTileCondition(Constants.SPHERE_BIT, "deadInversed", true);
 	//	this.createTileCondition(Constants.SPHERE_BIT, "dead", true);
-		this.createPlayer(400,1200);
+		this.createPlayer(400,1700);
 		//this.cam.position.x =0;
 	}
 
@@ -35,7 +37,17 @@ public class Level4 extends Level{
 		handleInput();
 		checkGameOver();
 		gravityChange();
-		
+		if(gameOverBool) {
+			Gdx.input.setInputProcessor(screenGameOver.Stage());
+			if(this.screenGameOver.menuPressed()) {
+				this.gameOver();
+			}
+			if(this.screenGameOver.retryPressed())	{
+				scoreArray.add(this.score);
+				scoreArray.save("level2");
+				gsm.set(new Level4(gsm, Constants.GRAVITY_WORLD));
+			}
+		}
 	}
 
 	@Override
@@ -43,7 +55,7 @@ public class Level4 extends Level{
 		// TODO Auto-generated method stub
 		super.render(sb);
 
-
+		
 		sb.begin();
 
 		if(gravityBool)
@@ -51,9 +63,12 @@ public class Level4 extends Level{
 		if(!gravityBool)
 			player.render(sb, gravityBool);
 		sb.end();
-		
+		if(gameOverBool) {
+			screenGameOver.Stage().draw();
+		}
+		hud.stage.draw();
 		debug.render(world, box2dCam.combined);
-
+		
 	}
 
 	@Override
@@ -111,7 +126,7 @@ public class Level4 extends Level{
 	@Override
 	protected void handleInput() {
 		// TODO Auto-generated method stub
-		player.movePlayer(customContactListener,gravityBool);
+		super.handleInput();
 	}
 
 	@Override

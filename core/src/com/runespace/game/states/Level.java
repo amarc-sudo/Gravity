@@ -2,6 +2,7 @@ package com.runespace.game.states;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -28,19 +29,24 @@ import com.runespace.game.LaunchGame;
 import com.runespace.game.entities.Player;
 import com.runespace.game.handlers.CustomContactListener;
 import com.runespace.game.handlers.GameStateManager;
+import com.runespace.game.stage.GameOver;
 import com.runespace.game.stage.Hud;
 import com.runespace.game.utils.Constants;
 
 
 public abstract class Level extends GameState implements ApplicationListener {
 
+	
 	//body
 	protected Body body;
 	//score
-
 	private FreeTypeFontGenerator.FreeTypeFontParameter parameter;
 	private FreeTypeFontGenerator generator;
 	protected int score;
+	
+	//game over elements
+	protected Boolean gameOverBool;
+	protected GameOver screenGameOver;
 	
 	//box2d elements
 	protected World world;
@@ -96,8 +102,8 @@ public abstract class Level extends GameState implements ApplicationListener {
 		box2dCam.setToOrtho(false, Constants.VIEWPORT_WIDTH/Constants.PIXEL_METER,Constants.VIEWPORT_HEIGHT/Constants.PIXEL_METER);
 		debug = new Box2DDebugRenderer();
 		
-		
-
+		screenGameOver = new GameOver();
+		gameOverBool = false;
 
 
 		//set contactlistener
@@ -106,34 +112,38 @@ public abstract class Level extends GameState implements ApplicationListener {
 		
 		//set font
 		
-		debug.setDrawBodies(true);
+		debug.setDrawBodies(false);
 		//setup camera
 		cam.setToOrtho(false, Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT);
 		//set hud
 		hud = new Hud(new ExtendViewport(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT, cam), LaunchGame.batch);
 		hud.update(score, jump);
 	}
-	float              accumulator = 0;
+	
+	@Override
+	protected void handleInput() {
+		// TODO Auto-generated method stub
+		if(!gameOverBool)	
+			player.movePlayer(customContactListener,gravityBool);
+		if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && (this.customContactListener.isOnGround() || this.customContactListener.isOnHead())){
+			jump++;
+		}
+		
+	}
+
 	public void update(float dt) {
 		//update World
-		scoreUpdate();
-		float delta = Gdx.graphics.getDeltaTime();
-
-        accumulator += Math.min(delta, 0.25f);
-
-        if (accumulator >= 1f / 60f) {
-            accumulator -= 1f / 60f;
-            world.step(1f / 60f, 6, 2);
-        }
+		if(!gameOverBool) {
+			scoreUpdate();
+			world.step(1f / 60f, 6, 2);
+		}
 	}
 	
 	public void render(SpriteBatch sb) {
 		
-
 		hud.update(score, jump);
 		tmr.setView(cam);
 		tmr.render();
-
 		sb.setProjectionMatrix(cam.combined);
 	}
 	
@@ -247,50 +257,10 @@ public abstract class Level extends GameState implements ApplicationListener {
 
 		 
 	}
-	/*
-	public void movePlayer() {
-		if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && !gravityBool ) {
-			 if(customContactListener.isOnGround()) {
-				boxPlayer.applyForceToCenter(0, 400, true);
-			 	jump +=1;
-			 }
-		}
-		else if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
-			if(customContactListener.isOnHead()) {
-				boxPlayer.applyForceToCenter(0, -400, true);
-				jump +=1;
-			}
-		}
-		
-		if(Gdx.input.isKeyPressed(Input.Keys.LEFT) && boxPlayer.getLinearVelocity().x > -3.00f) {
-			boxPlayer.applyLinearImpulse( new Vector2(-0.15f,0), boxPlayer.getWorldCenter(), true);
-
-			if(!backward) {
-				player.reverseW();
-				backward = true;
-			}
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.RIGHT) && boxPlayer.getLinearVelocity().x < 3.00f) {
-			boxPlayer.applyLinearImpulse( new Vector2(0.15f,0), boxPlayer.getWorldCenter(), true);
-			if(backward) {
-				player.reverseW();
-				backward = false;
-			}
-		}
-		
-		if(Gdx.input.isKeyPressed(Input.Keys.I) ) {
-			debug.setDrawBodies(false);
-		}
-	}*/
+	
 	
 	public void moveCam(int speedCam) {
-		/*
-		this.box2dCamposition.x += speedCam/Constants.PIXEL_METER;
-		this.box2dCam.position.y = player.getPosition().y;
-		this.box2dCam.update();
-		this.cam.position.x += speedCam;
-		this.cam.position.y = player.getPosition().y*Constants.PIXEL_METER;
-		this.cam.update();*/
+		
 		this.box2dCam.position.x = this.boxPlayer.getPosition().x;
 		this.box2dCam.position.y = boxPlayer.getPosition().y;
 		this.box2dCam.update();
@@ -308,14 +278,12 @@ public abstract class Level extends GameState implements ApplicationListener {
 	}
 	
 	public void checkGameOver() {
-		if(/*player.getPosition().x < ((box2dCam.position.x)-box2dCam.viewportWidth/2)-Constants.WIDTH_PLAYER/Constants.PIXEL_METER ||*/ customContactListener.isDead()) {
-			gameOver();
-			for(int i = 0 ; i < 10000 ; i++);
+		if(customContactListener.isDead()) {
+			gameOverBool = true;
 		}
 	}
 	
 	public void gameOver() {
-
 		gsm.set(new MainMenue2(gsm, true));
 	}
 	public void gravityChange() {

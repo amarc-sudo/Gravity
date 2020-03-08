@@ -20,7 +20,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
  * @author aurel
  *
  */
-public class Hud {
+public class Hud  {
 	
 	public Stage stage;
 	@SuppressWarnings("unused")

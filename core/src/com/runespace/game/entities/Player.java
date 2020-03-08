@@ -73,7 +73,7 @@ public class Player extends B2DSprites {
         if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && !gravityBool ) {
             if(customContactListener.isOnGround())
                 body.applyForceToCenter(0, 400, true);
-
+            	
         }
         else if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)){
             if(customContactListener.isOnHead())

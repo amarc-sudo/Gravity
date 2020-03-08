@@ -18,12 +18,16 @@ import com.badlogic.gdx.utils.viewport.Viewport;
  *
  */
 public class Hud {
-	
+	public Stage stt;
 	public Stage stage;
+	@SuppressWarnings("unused")
 	private SpriteBatch sb;
+	@SuppressWarnings("unused")
 	private Viewport viewport;
 	
 	private int score;
+	
+	@SuppressWarnings("unused")
 	private int jump;
 	
 	Label scoreLabel, jumpLabel;

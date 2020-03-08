@@ -91,8 +91,8 @@ public class ScoreBoard implements Serializable {
 
     }
 
-    public void load(String name){
-        String username = System.getProperty("user.name");
+    @SuppressWarnings("unchecked")
+	public void load(String name){
         if(isWindows()) {
 	        try {
 	                // ouverture d'un flux d'entrée depuis le fichier "personne.serial"
@@ -157,7 +157,6 @@ public class ScoreBoard implements Serializable {
     }
 
     public void createSave(){
-        String username = System.getProperty("user.name");
         File file;
         if(isWindows()) {
 	            file = new File(f.toString() + "\\Gravity");

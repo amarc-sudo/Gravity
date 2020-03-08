@@ -1,13 +1,10 @@
 package com.runespace.game.states;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 import com.runespace.game.LaunchGame;
 import com.runespace.game.handlers.GameStateManager;
 import com.runespace.game.scoreboard.ScoreBoard;
-import com.runespace.game.utils.Constants;
 
 public class Level4 extends Level{
 

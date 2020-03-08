@@ -1,9 +1,5 @@
 package com.runespace.game.states;
 
-import java.io.File;
-
-import javax.swing.filechooser.FileSystemView;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -16,10 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.runespace.game.LaunchGame;
 import com.runespace.game.handlers.GameStateManager;
-import com.runespace.game.stage.Hud;
 import com.runespace.game.utils.Constants;
 
 public class MainMenue2 extends GameState {
@@ -42,7 +36,6 @@ public class MainMenue2 extends GameState {
     BitmapFont font;
     Skin skin;
     TextureAtlas buttonAtlas;
-    private Boolean gameEnd;
     Image backImage;
 	Texture background;
 	
@@ -82,8 +75,7 @@ public class MainMenue2 extends GameState {
 			stage.addActor(buttonTab[i]);
         }
      
-       
-		this.gameEnd = gameEnd;
+  
 	}
 
 	@Override

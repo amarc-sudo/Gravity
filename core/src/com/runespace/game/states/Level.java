@@ -2,21 +2,17 @@ package com.runespace.game.states;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.objects.PolygonMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -28,13 +24,9 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.runespace.game.LaunchGame;
 import com.runespace.game.entities.Player;
 import com.runespace.game.handlers.CustomContactListener;
-import com.runespace.game.handlers.CustomInputHandling;
-import com.runespace.game.handlers.CustomInputProcessor;
 import com.runespace.game.handlers.GameStateManager;
 import com.runespace.game.stage.Hud;
 import com.runespace.game.utils.Constants;
@@ -45,7 +37,7 @@ public abstract class Level extends GameState implements ApplicationListener {
 	//body
 	protected Body body;
 	//score
-	private BitmapFont font;
+
 	private FreeTypeFontGenerator.FreeTypeFontParameter parameter;
 	private FreeTypeFontGenerator generator;
 	protected int score;
@@ -83,6 +75,10 @@ public abstract class Level extends GameState implements ApplicationListener {
 	protected int jump = 0;
 	//Music
 	Music music;
+	
+	//Bitmapfont
+	
+	BitmapFont font;
 	public Level(GameStateManager gsm, Vector2 gravity) {
 		super(gsm);
 
@@ -118,7 +114,6 @@ public abstract class Level extends GameState implements ApplicationListener {
 		hud.update(score, jump);
 	}
 	float              accumulator = 0;
-	private PolygonShape pshape;
 	public void update(float dt) {
 		//update World
 		scoreUpdate();

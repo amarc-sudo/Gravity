@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -18,7 +19,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
  *
  */
 public class Hud {
-	public Stage stt;
+	
 	public Stage stage;
 	@SuppressWarnings("unused")
 	private SpriteBatch sb;
@@ -26,6 +27,9 @@ public class Hud {
 	private Viewport viewport;
 	
 	private int score;
+	
+	@SuppressWarnings("unused")
+	private Button buttonPause;
 	
 	@SuppressWarnings("unused")
 	private int jump;

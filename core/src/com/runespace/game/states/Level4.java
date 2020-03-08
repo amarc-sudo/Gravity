@@ -89,11 +89,7 @@ public class Level4 extends Level{
 		super.createPlayer(x, y);
 	}
 
-	@Override
-	public void movePlayer() {
-		// TODO Auto-generated method stub
-		super.movePlayer();
-	}
+
 
 	@Override
 	public void moveCam(int speedCam) {

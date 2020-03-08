@@ -26,11 +26,11 @@ public class Level3 extends Level {
 		scoreArray.load("level1");
 
 		createGround();
-		createDead();
+		
 		//createTiles(LaunchGame.assetManager.get("maps/Main.tmx", TiledMap.class));
 		//this.createTileCondition(Constants.SPHERE_BIT, "dead", true);
 		// TODO Auto-generated constructor stub
-		this.createPlayer(600,1000);
+		this.createPlayer(400, 1000);
 		create();
 	}
 
@@ -50,7 +50,7 @@ public class Level3 extends Level {
 		super.render(sb);
 		
 		sb.begin();
-		player.render(sb, false);
+		//player.render(sb, false);
 		sb.end();
 		//pointLight.setPosition(this.box2dCam.position.x+Constants.VIEWPORT_WIDTH/2/Constants.PIXEL_METER, this.box2dCam.position.y+Constants.VIEWPORT_HEIGHT/2/Constants.PIXEL_METER);
 		rayHandler.setCombinedMatrix(box2dCam);
@@ -72,8 +72,7 @@ public class Level3 extends Level {
 		// TODO Auto-generated method stub
 		super.createTiles(tiledMap);
 	}*/
-	@Override
-	public void createPlayer(int x, int y) {
+	/*public void createPlayer(int x, int y) {
 		// TODO Auto-generated method stub
 		super.createPlayer(x, y);
 	}
@@ -94,15 +93,9 @@ public class Level3 extends Level {
 	@Override
 	protected void handleInput() {
 		// TODO Auto-generated method stub
-		movePlayer();
-	}
-	@Override
-	public void movePlayer() {
-		// TODO Auto-generated method stub
-		super.movePlayer();
+
 	}
 
-	@Override
 	public void create() {
 		// TODO Auto-generated method stub
 		rayHandler = new RayHandler(world);

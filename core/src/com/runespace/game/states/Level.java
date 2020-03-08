@@ -21,6 +21,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Box2D;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -29,6 +30,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.codeandweb.physicseditor.PhysicsShapeCache;
 import com.runespace.game.LaunchGame;
 import com.runespace.game.entities.Player;
 import com.runespace.game.handlers.CustomContactListener;
@@ -79,7 +81,7 @@ public abstract class Level extends GameState implements ApplicationListener {
 	
 	protected Texture background;
 	
-	
+	PhysicsShapeCache physicsBodies;
 	//timer for gravity change
 	protected int time = 0;
 	protected int jump = 0;
@@ -88,21 +90,22 @@ public abstract class Level extends GameState implements ApplicationListener {
 	public Level(GameStateManager gsm, Vector2 gravity) {
 		super(gsm);
 
-	
 		//
 		tiledMap = LaunchGame.assetManager.get("maps/Main.tmx", TiledMap.class);
 		//setup background;
 		background = LaunchGame.assetManager.get("background/aled.png", Texture.class);
 
 		//setup Box2d elements
+		Box2D.init();
 		world = new World(gravity, true);
 		bdef = new BodyDef();
 		fdef = new FixtureDef();
 		box2dCam = new OrthographicCamera();
 		box2dCam.setToOrtho(false, Constants.VIEWPORT_WIDTH/Constants.PIXEL_METER,Constants.VIEWPORT_HEIGHT/Constants.PIXEL_METER);
 		debug = new Box2DDebugRenderer();
-
 		
+		
+		physicsBodies = new PhysicsShapeCache("physic/test.xml");
 
 
 		//set contactlistener
@@ -111,7 +114,7 @@ public abstract class Level extends GameState implements ApplicationListener {
 		
 		//set font
 		
-		debug.setDrawBodies(false);
+		debug.setDrawBodies(true);
 		//setup camera
 		cam.setToOrtho(false, Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT);
 		//set hud
@@ -125,11 +128,19 @@ public abstract class Level extends GameState implements ApplicationListener {
 		handler.setBlurNum(3);
 		new PointLight(handler, 8, new Color(1,1,1,1), 100, 0, 0);
 	}
-
+	float              accumulator = 0;
+	private PolygonShape pshape;
 	public void update(float dt) {
 		//update World
 		scoreUpdate();
-		world.step(1/60f, 6, 2);
+		float delta = Gdx.graphics.getDeltaTime();
+
+        accumulator += Math.min(delta, 0.25f);
+
+        if (accumulator >= 1f / 60f) {
+            accumulator -= 1f / 60f;
+            world.step(1f / 60f, 6, 2);
+        }
 	}
 	
 	public void render(SpriteBatch sb) {
@@ -209,48 +220,35 @@ public abstract class Level extends GameState implements ApplicationListener {
 	}
 	
 	public void createPlayer(int x, int y) {
-		//Body Def
-		PolygonShape pshape = new PolygonShape();
-		/////////////BOX/////////////
+		pshape = new PolygonShape();
 		
-		//Body Def
-		bdef.position.set(x/Constants.PIXEL_METER, y/Constants.PIXEL_METER);
-		bdef.type = BodyDef.BodyType.DynamicBody;
-		
-		//Create Body
-		boxPlayer = world.createBody(bdef);
-		
-		
-		//Polygon shape
-		pshape.setAsBox(Constants.WIDTH_PLAYER/4/Constants.PIXEL_METER, Constants.HEIGHT_PLAYER/3/Constants.PIXEL_METER);
-		
-		fdef.shape = pshape;
-		fdef.filter.categoryBits = Constants.BOX_BIT;
-		fdef.filter.maskBits = Constants.PLARTFORM_BIT | Constants.SPHERE_BIT;
-		
-		//create Fixture
-		boxPlayer.createFixture(fdef).setUserData("box");
+		boxPlayer = physicsBodies.createBody("p1_stand", world, 0.01f, 0.01f);
+		boxPlayer.setTransform(x/100, y/100, 0);
 
 		player = new Player(boxPlayer);
 		boxPlayer.setUserData(player);
-
-		//////Create foot sensor///////
-		pshape.setAsBox(Constants.WIDTH_PLAYER/5/Constants.PIXEL_METER, 10/Constants.PIXEL_METER, 
-				new Vector2(0, -Constants.WIDTH_PLAYER/3/Constants.PIXEL_METER-1/Constants.PIXEL_METER), 0);
+		fdef.filter.categoryBits = Constants.BOX_BIT;
+		fdef.filter.maskBits = Constants.PLARTFORM_BIT | Constants.SPHERE_BIT;
+		pshape.setAsBox(0, 0, 
+				new Vector2(0, -Constants.WIDTH_PLAYER/3/Constants.PIXEL_METER-5/Constants.PIXEL_METER), 0);
 		fdef.shape = pshape;
 		fdef.isSensor = true;
 		boxPlayer.createFixture(fdef).setUserData("foot");
 		fdef.isSensor = false;
+		//Constants.WIDTH_PLAYER/5/Constants.PIXEL_METER, 10/Constants.PIXEL_METER
+		//Constants.WIDTH_PLAYER/5/Constants.PIXEL_METER, 10/Constants.PIXEL_METER
 		//////Create head sensor///////
-		pshape.setAsBox(Constants.WIDTH_PLAYER/5/Constants.PIXEL_METER, 10/Constants.PIXEL_METER, 
+		pshape.setAsBox(0,0, 
 				new Vector2(0, Constants.WIDTH_PLAYER/3/Constants.PIXEL_METER+1/Constants.PIXEL_METER), 0);
 		fdef.shape = pshape;
 		fdef.isSensor = true;
 		boxPlayer.createFixture(fdef).setUserData("head");
 		fdef.isSensor = false;
 		///////END BOX/////////////////
+
+		 
 	}
-	
+	/*
 	public void movePlayer() {
 		if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && !gravityBool ) {
 			 if(customContactListener.isOnGround()) {
@@ -284,7 +282,7 @@ public abstract class Level extends GameState implements ApplicationListener {
 		if(Gdx.input.isKeyPressed(Input.Keys.I) ) {
 			debug.setDrawBodies(false);
 		}
-	}
+	}*/
 	
 	public void moveCam(int speedCam) {
 		/*
@@ -294,11 +292,11 @@ public abstract class Level extends GameState implements ApplicationListener {
 		this.cam.position.x += speedCam;
 		this.cam.position.y = player.getPosition().y*Constants.PIXEL_METER;
 		this.cam.update();*/
-		this.box2dCam.position.x = player.getPosition().x;
-		this.box2dCam.position.y = player.getPosition().y;
+		this.box2dCam.position.x = this.boxPlayer.getPosition().x;
+		this.box2dCam.position.y = boxPlayer.getPosition().y;
 		this.box2dCam.update();
-		this.cam.position.x = player.getPosition().x*Constants.PIXEL_METER;
-		this.cam.position.y = player.getPosition().y*Constants.PIXEL_METER;
+		this.cam.position.x = boxPlayer.getPosition().x*Constants.PIXEL_METER;
+		this.cam.position.y = boxPlayer.getPosition().y*Constants.PIXEL_METER;
 		this.cam.update();
 		
 	}

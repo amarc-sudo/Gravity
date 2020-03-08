@@ -30,7 +30,6 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.codeandweb.physicseditor.PhysicsShapeCache;
 import com.runespace.game.LaunchGame;
 import com.runespace.game.entities.Player;
 import com.runespace.game.handlers.CustomContactListener;
@@ -40,8 +39,6 @@ import com.runespace.game.handlers.GameStateManager;
 import com.runespace.game.stage.Hud;
 import com.runespace.game.utils.Constants;
 
-import box2dLight.PointLight;
-import box2dLight.RayHandler;
 
 public abstract class Level extends GameState implements ApplicationListener {
 
@@ -62,8 +59,7 @@ public abstract class Level extends GameState implements ApplicationListener {
 	Hud hud;
 	//customcontactlistener
 	protected CustomContactListener customContactListener;
-	
-	RayHandler handler;
+
 
 	//tiled elements
 	protected TiledMap tiledMap;
@@ -81,7 +77,7 @@ public abstract class Level extends GameState implements ApplicationListener {
 	
 	protected Texture background;
 	
-	PhysicsShapeCache physicsBodies;
+
 	//timer for gravity change
 	protected int time = 0;
 	protected int jump = 0;
@@ -105,7 +101,7 @@ public abstract class Level extends GameState implements ApplicationListener {
 		debug = new Box2DDebugRenderer();
 		
 		
-		physicsBodies = new PhysicsShapeCache("physic/test.xml");
+
 
 
 		//set contactlistener
@@ -120,13 +116,6 @@ public abstract class Level extends GameState implements ApplicationListener {
 		//set hud
 		hud = new Hud(new ExtendViewport(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT, cam), LaunchGame.batch);
 		hud.update(score, jump);
-		handler = new RayHandler(world);
-		RayHandler.setGammaCorrection(true);
-		RayHandler.useDiffuseLight(true);
-		handler.setAmbientLight(0);
-		handler.setShadows(true);
-		handler.setBlurNum(3);
-		new PointLight(handler, 8, new Color(1,1,1,1), 100, 0, 0);
 	}
 	float              accumulator = 0;
 	private PolygonShape pshape;
@@ -145,8 +134,7 @@ public abstract class Level extends GameState implements ApplicationListener {
 	
 	public void render(SpriteBatch sb) {
 		
-		handler.setCombinedMatrix(cam);
-		handler.updateAndRender();
+
 		hud.update(score, jump);
 		tmr.setView(cam);
 		tmr.render();
@@ -220,16 +208,32 @@ public abstract class Level extends GameState implements ApplicationListener {
 	}
 	
 	public void createPlayer(int x, int y) {
-		pshape = new PolygonShape();
-		
-		boxPlayer = physicsBodies.createBody("p1_stand", world, 0.01f, 0.01f);
-		boxPlayer.setTransform(x/100, y/100, 0);
+		//Body Def
+		PolygonShape pshape = new PolygonShape();
+		/////////////BOX/////////////
+
+		//Body Def
+		bdef.position.set(x/Constants.PIXEL_METER, y/Constants.PIXEL_METER);
+		bdef.type = BodyDef.BodyType.DynamicBody;
+
+		//Create Body
+		boxPlayer = world.createBody(bdef);
+
+
+		//Polygon shape
+		pshape.setAsBox(Constants.WIDTH_PLAYER/4/Constants.PIXEL_METER, Constants.HEIGHT_PLAYER/3/Constants.PIXEL_METER);
+
+		fdef.shape = pshape;
+		fdef.filter.categoryBits = Constants.BOX_BIT;
+		fdef.filter.maskBits = Constants.PLARTFORM_BIT | Constants.SPHERE_BIT;
+
+		//create Fixture
+		boxPlayer.createFixture(fdef).setUserData("box");
 
 		player = new Player(boxPlayer);
 		boxPlayer.setUserData(player);
-		fdef.filter.categoryBits = Constants.BOX_BIT;
-		fdef.filter.maskBits = Constants.PLARTFORM_BIT | Constants.SPHERE_BIT;
-		pshape.setAsBox(0, 0, 
+
+		pshape.setAsBox(Constants.WIDTH_PLAYER/5/Constants.PIXEL_METER, 10/Constants.PIXEL_METER,
 				new Vector2(0, -Constants.WIDTH_PLAYER/3/Constants.PIXEL_METER-5/Constants.PIXEL_METER), 0);
 		fdef.shape = pshape;
 		fdef.isSensor = true;
@@ -238,7 +242,7 @@ public abstract class Level extends GameState implements ApplicationListener {
 		//Constants.WIDTH_PLAYER/5/Constants.PIXEL_METER, 10/Constants.PIXEL_METER
 		//Constants.WIDTH_PLAYER/5/Constants.PIXEL_METER, 10/Constants.PIXEL_METER
 		//////Create head sensor///////
-		pshape.setAsBox(0,0, 
+		pshape.setAsBox(Constants.WIDTH_PLAYER/5/Constants.PIXEL_METER, 10/Constants.PIXEL_METER,
 				new Vector2(0, Constants.WIDTH_PLAYER/3/Constants.PIXEL_METER+1/Constants.PIXEL_METER), 0);
 		fdef.shape = pshape;
 		fdef.isSensor = true;

@@ -12,6 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 /**
@@ -28,8 +30,9 @@ public class Hud {
 	
 	private int score;
 	
-	@SuppressWarnings("unused")
+	
 	private Button buttonPause;
+	private TextButtonStyle textButtonStyle;
 	
 	@SuppressWarnings("unused")
 	private int jump;
@@ -59,6 +62,15 @@ public class Hud {
 		tableBot.add(jumpLabel).expandX().padBottom(10);
 		stage.addActor(table);
 		stage.addActor(tableBot);
+		
+		textButtonStyle = new TextButtonStyle();
+	    textButtonStyle.font = font;
+
+	    buttonPause = new TextButton("Pause", textButtonStyle);
+	    buttonPause.setWidth(150f);
+	    buttonPause.setHeight(100f);
+	    buttonPause.setPosition(0, 0);
+		stage.addActor(buttonPause);
 	}
 	public void update(int i, int jump) {
 		this.score = i;

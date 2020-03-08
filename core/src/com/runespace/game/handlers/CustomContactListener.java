@@ -21,12 +21,12 @@ public class CustomContactListener implements ContactListener {
 		Fixture fB = contact.getFixtureB();
 		
 		if(fA.getUserData() != null && fA.getUserData().equals("foot")) {
-			System.out.println(fA.getUserData()+ " dis coucou a " +fB.getUserData());
+			 
 			footContacts++;
 		}
 		
 		if(fB.getUserData() != null && fB.getUserData().equals("foot")) {
-			System.out.println(fA.getUserData()+ " dis coucou a " +fB.getUserData());
+			 
 			footContacts++;
 		}
 		if(fA.getUserData()!= null && fA.getUserData().equals("sensorG")) {
@@ -39,34 +39,34 @@ public class CustomContactListener implements ContactListener {
 			
 		}
 		if(fA.getUserData() != null && fA.getUserData().equals("head")) {
-			System.out.println(fA.getUserData()+ " dis coucou a " +fB.getUserData());
+			 
 			headContacts++;
 		}
 		
 		if(fB.getUserData() != null && fB.getUserData().equals("head")) {
-			System.out.println(fA.getUserData()+ " dis coucou a " +fB.getUserData());
+			 
 			headContacts++;
 		}
 		if(fA.getUserData() != null && fA.getUserData().equals("deadInversed")) {
-			System.out.println(fA.getUserData()+ " dis coucou a " +fB.getUserData());
+			 
 			dead++;
 		}
 
 		if(fB.getUserData() != null && fB.getUserData().equals("deadInversed")) {
-			System.out.println(fA.getUserData()+ " dis coucou a " +fB.getUserData());
+			 
 			dead++;
 		}
 		if(fA.getUserData() != null && fA.getUserData().equals("dead")) {
-			System.out.println(fA.getUserData()+ " dis coucou a " +fB.getUserData());
+			 
 			dead++;
 		}
 
 		if(fB.getUserData() != null && fB.getUserData().equals("dead")) {
-			System.out.println(fA.getUserData()+ " dis coucou a " +fB.getUserData());
+			 
 			dead++;
 		}
 
-		//System.out.println(fA.getUserData()+ " dis coucou a " +fB.getUserData());
+		// 
 	}
 	
 	//contact termine

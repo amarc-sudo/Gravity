@@ -65,10 +65,10 @@ public class ScoreVieweur extends GameState {
                 }
 
             } catch (ClassCastException e) {
-                System.out.println("Exception thrown : " + e);
+            	Gdx.app.error("Exception thrown : ", "bug ScoreVieweur" , e);
             } catch (NoSuchElementException e) {
                 button[i] = new TextButton("level : Nothing", textButtonStyle);
-                System.out.println("Exception thrown : " + e);
+                Gdx.app.error("Exception thrown : ", "bug ScoreVieweur" , e);
             }
             button[i].setWidth(150f);
             button[i].setHeight(100f);

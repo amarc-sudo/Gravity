@@ -51,7 +51,7 @@ public class ScoreBoard implements Serializable {
 	            oos.writeObject(scoreBoard);
 	            // on vide le tampon
 	            oos.flush();
-	            System.out.println(" a ete serialise");
+	        
 	            } finally {
 	            //fermeture des flux
 	                try {
@@ -66,7 +66,7 @@ public class ScoreBoard implements Serializable {
            }
         if(isUnix()) {
 	        try {
-	        	System.out.print("coucou");
+	        	
 	            FileOutputStream fos = new FileOutputStream(new File(f.toString()+"/gravity/" + name+".serial"));
 	            // création d'un "flux objet" avec le flux fichier
 	            ObjectOutputStream oos= new ObjectOutputStream(fos);
@@ -75,7 +75,7 @@ public class ScoreBoard implements Serializable {
 	            oos.writeObject(scoreBoard);
 	            // on vide le tampon
 	            oos.flush();
-	            System.out.println(" a ete serialise");
+	        
 	            } finally {
 	            //fermeture des flux
 	                try {
@@ -117,7 +117,7 @@ public class ScoreBoard implements Serializable {
 	                cnfe.printStackTrace();
 	            }
 	            if(scoreBoard != null) {
-	                System.out.println(scoreBoard + " a ete deserialise");
+	            	
 	            }
         }
         if(isUnix()) {
@@ -145,7 +145,7 @@ public class ScoreBoard implements Serializable {
 	                cnfe.printStackTrace();
 	            }
 	            if(scoreBoard != null) {
-	                System.out.println(scoreBoard + " a ete deserialise");
+
 	            }
         	}	
         }
@@ -162,12 +162,12 @@ public class ScoreBoard implements Serializable {
 	            file = new File(f.toString() + "\\Gravity");
 	
 	            if (file.exists()) {
-	                System.out.println("Le dossier existe déjà : " + file.getAbsolutePath());
+	                
 	            } else {
 	                if (file.mkdir()) {
-	                    System.out.println("Ajout du dossier : " + file.getAbsolutePath());
+	                    
 	                } else {
-	                    System.out.println("Echec sur le dossier : " + file.getAbsolutePath());
+	                   
 	                }
 	            }
         }
@@ -176,12 +176,12 @@ public class ScoreBoard implements Serializable {
     		file = new File(f.toString()+"/gravity");
     		
             if (file.exists()) {
-                System.out.println("Le dossier existe déjà : " + file.getAbsolutePath());
+                
             } else {
                 if (file.mkdirs()) {
-                    System.out.println("Ajout du dossier : " + file.getAbsolutePath());
+                 
                 } else {
-                    System.out.println("Echec sur le dossier : " + file.getAbsolutePath());
+                 
                 }
             }
     }
